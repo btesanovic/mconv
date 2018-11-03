@@ -1,7 +1,8 @@
 # mconv
-Photo Image and Video converter shrinker written in PHP for MacOS , Linux and possibly Windows 
+Photo Image and Video converter shrinker written in PHP for Mac OSX , Linux and possibly Windows 
 
-Video conversion is dependant on videolan ffmpeg binary 
+Video conversion is dependant on videolan ffmpeg binary,
+
 Image conversion requieres GD php library
 
 ## Dependancy
@@ -11,13 +12,13 @@ Image conversion requieres GD php library
 
 This library can be used in other PHP projects or as standalone with mconv CLI tool , **mconv** stands for media converter 
 
-Main purpose of this tool is to save space but retain image and video quality 
+Main purpose of this tool is to **save space but retain image and video quality** 
 
 ## Installing
 * `brew install ffmpeg` OSX
 * `composer require btesanovic/mconv`
 
-##Usage
+## Usage
 Lets say you want to save space by converting all video files to **mp4** ( this is default video output format )
 
 ### Example 1
