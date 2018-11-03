@@ -16,7 +16,7 @@ Main purpose of this tool is to **save space but retain image and video quality*
 
 ## Installing
 * `brew install ffmpeg` OSX
-* `composer require btesanovic/mconv`
+* `composer global require btesanovic/mconv`
 
 ## Usage
 Lets say you want to save space by converting all video files to **mp4** ( this is default video output format )

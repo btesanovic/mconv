@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-$dirparent = realpath( __DIR__ .'/../');
+$dirparent = realpath( __DIR__ .'/../../');
 require $dirparent .'/vendor/autoload.php';
 
 use btesanovic\mconv\VConv;
