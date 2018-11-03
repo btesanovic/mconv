@@ -1,8 +1,16 @@
 #!/usr/bin/env php
 <?php
 
-$dirparent = realpath( __DIR__ .'/../../');
-require $dirparent .'/vendor/autoload.php';
+$dirparentGlobal = realpath( __DIR__ .'/../../../');
+$dirparentLocal = realpath( __DIR__ .'/../');
+
+$f1 = $dirparentGlobal .'/autoload.php';
+$f2 = $dirparentLocal .'/autoload.php';
+if(file_exists($f1)){
+    require  $f1;
+}else{
+    require $f2;
+}
 
 use btesanovic\mconv\VConv;
 
