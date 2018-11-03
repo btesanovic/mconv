@@ -1,0 +1,22 @@
+{
+    "name": "btesanovic/mconv",
+    "description": "Image Photo and Video converter",
+    "authors": [
+        {
+            "name": "Bojan Tesanovic",
+            "email": "bojan@vast.com"
+        }
+    ],
+    "require": {},
+    "autoload" :{
+        "psr-4":{
+            "btesanovic\\mconv\\":"src"
+        }
+    },
+    "bin": [
+        "bin/mconv"
+    ],
+    "config":{
+        "classmap-authoritative": true
+    }
+}
