@@ -26,7 +26,7 @@ Lets say you want to save space by converting all video files to **mp4** ( this 
 * Input folder `~/Movies`
 * Input formats `mpg avi mov`
 * Output format `mp4`
-* -g Stands for glob "**\***" denotes all files you could use "2018*" to convert all files starting with file name **2018** that have any of extensions mentioned above `mpg avi mov`
+* -g Stands for glob , "**\***" matches all files , for example you could use "2018*" to match all files starting with file name **2018** that have any of extensions mentioned above `mpg avi mov`
 
  Command
  

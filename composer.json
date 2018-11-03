@@ -1,10 +1,10 @@
 {
     "name": "btesanovic/mconv",
-    "description": "Image Photo and Video converter",
+    "description": "Image Photo and Video converter shrinker",
     "authors": [
         {
             "name": "Bojan Tesanovic",
-            "email": "bojan@vast.com"
+            "email": "btesanovic@vast.com"
         }
     ],
     "require": {},
