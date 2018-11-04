@@ -30,15 +30,16 @@ Lets say you want to save space by converting all video files to **mp4** ( this 
 
  Command
  
-  `mconv -i ~/Movies -i "mpg,avi,mov" -o mp4 -g "*"`
+  `mconv -p ~/Movies -i "mpg,avi,mov" -o mp4 -g "*"`
   
 ### Example 2
  Delete all originally converted files
  
  * Input folder `~/Movies`
+ 
  Command
  
-  `mconv -i ~/Movies -d`
+  `mconv -p ~/Movies -d`
 
  
 

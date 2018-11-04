@@ -55,13 +55,13 @@ class Converter
 
             if(fnmatch($glob , $filename )){
                 if( $this->isInputFormat($filename) ){
-                    echo "macthed $filename\n";
+                    //echo "macthed $filename\n";
                     $this->convert($path , $this->outputFormat);
                 }else{
-                    echo "glob matched but input format is did not $filename \n";
+                    //echo "glob matched but input format is did not $filename \n";
                 }
             }else{
-                echo " - skipping $filename\n";
+                //echo " - skipping $filename\n";
             }
         }
 
@@ -127,8 +127,12 @@ class Converter
             $conv = round(filesize($convPath)/(1024*1024) ,1);
             echo "Original: $og Mb  '$path'\n";
             echo "Converted:$conv Mb '$convPath''\n";
-            if($this->ask("Delete")){            
+            $answ = $this->ask("Delete hit 'c' to delte converted file ") ;
+            if($answ== 'y'){            
                 unlink($path);
+            }
+            if($answ == 'c'){            
+                unlink($convPath);
             }
         }
     }
@@ -136,7 +140,7 @@ class Converter
     public function ask($q){
         echo "$q [Y/n]? \n";
         $a = strtolower(trim(fgets(STDIN)));
-        return $a=='y';
+        return $a;
     }
 
     public function getExtension($file){

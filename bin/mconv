@@ -1,99 +1,131 @@
 #!/usr/bin/env php
 <?php
 
-$dirparentGlobal = realpath( __DIR__ .'/../../../');
-$dirparentLocal = realpath( __DIR__ .'/../');
+$dirparentGlobal = realpath(__DIR__ . '/../../../');
+$dirparentLocal = realpath(__DIR__ . '/../');
 
-$f1 = $dirparentGlobal .'/autoload.php';
-$f2 = $dirparentLocal .'/autoload.php';
-if(file_exists($f1)){
-    require  $f1;
-}else{
-    require $f2;
+$fs = [];
+$fs[] = $dirparentGlobal . '/autoload.php';
+$fs[] = $dirparentLocal . '/autoload.php';
+$fs[] = $dirparentLocal . '/vendor/autoload.php';
+$hit = 0;
+foreach ($fs as $f) {
+    if (file_exists($f)) {
+        require $f;
+        $hit = 1;
+    }
+}
+if (!$hit) {
+    throw new Exception("could not find autoload.php");
 }
 
 use btesanovic\mconv\VConv;
+use btesanovic\mconv\IConv;
 
 $opts = [
-    'p:'=>'path:',
-    'i:'=>'infput-formats',
-    'o:'=>'output-format',
-    'g:'=>'glob',
-    'd::'=>'delete',
-    'f::'=>'ffmpeg',
+    'p:' => 'path:',
+    'i:' => 'infput-formats',
+    'o:' => 'output-format',
+    'g:' => 'glob',
+    'd::' => 'delete',
+    'f::' => 'ffmpeg',
+    'l::' => 'photo::',
+    'a::' => 'auto::',
+    'm::' => 'max::',
     //'t:'=>'output-format:',
 ];
 $desc = [
-    'p:'=>'input path',
-    'i:'=>'comma delimited media extensions to convert ie for vides -i "avi,mpg" ',
-    'o:'=>'output format of conversin ie -o mp4',
-    'g:'=>'glob is pattern to match files against use -g "*" for all files or -g "2018*"  that will match files starting with 2018 in name',
-    'd::'=>'delete files after conversion ',
-    'f::'=>'if ffmpeg can not be autodetected provide full path to ffmpeg ie -f /usr/var/bin/ffmpeg'
-    
-  
+    'p:' => 'input path',
+    'i:' => 'comma delimited media extensions to convert ie for vides -i "avi,mpg" ',
+    'o:' => 'output format of conversin ie -o mp4',
+    'g:' => 'glob is pattern to match files against use -g "*" for all files or -g "2018*"  that will match files starting with 2018 in name',
+    'd::' => 'delete files after conversion ',
+    'f::' => 'if ffmpeg can not be autodetected provide full path to ffmpeg ie -f /usr/var/bin/ffmpeg',
+    'l::' => 'convert photos-images',
+    'a::' => 'auto conversion , will use all supported image formats will convert them to jpg and delete origina; if size of conversin is smaller',
+    'm::' => 'maximum height of with to mainting while shrinking '
+
 ];
 
-$Args = g_getopt($opts , $desc);
-
-$conv = new VConv();
+$Args = g_getopt($opts, $desc);
 var_dump($Args);
-$ifrms = explode( ',',$Args->i);
+if($Args->photo){
+    $conv = new IConv();
+
+}else{
+    $conv = new VConv();
+}
+$ifrms = explode(',', $Args->i);
 $conv->setInputFormats($ifrms);
 $conv->setOutputFormat($Args->o);
 $conv->deleteAfter($Args->d);
-if($Args->g && $Args->i){
-    $conv->convertRecursive($Args->p , $Args->g);
-}else{
-    $conv->deleteConverted($Args->p);
+
+if ($Args->photo) {
+    $conv->auto($Args->auto);
+    $conv->setMax($Args->m);
+    $conv->convertRecursive($Args->p, $Args->g);
+} else {
+    if ($Args->g && $Args->i) {
+        $conv->convertRecursive($Args->p, $Args->g);
+    } else {
+        $conv->deleteConverted($Args->p);
+    }
 }
 
+function g_getopt(array $opts, $desc): \stdClass
+{
 
-
-function g_getopt(array $opts , $desc):\stdClass{
-
-    $printopt = function($desc) {
+    $printopt = function ($desc) {
         echo "Usage options\n";
-        foreach($desc as $d=>$long){
-            $key = trim($d , ':');
-            $isReq = strlen($d) < 3 ;
-            echo '-'.$key .' ';
-            if($isReq){
+        foreach ($desc as $d => $long) {
+            $key = trim($d, ':');
+            $isReq = strlen($d) < 3;
+            echo '-' . $key . ' ';
+            if ($isReq) {
                 echo " [requiered] ";
             }
 
-            echo $long ."\n";
+            echo $long . "\n";
         }
     };
-    $o = getopt(implode( '' , array_keys($opts)) , array_values($opts));
+    $o = getopt(implode('', array_keys($opts)), array_values($opts));
     $hasMissing = false;
-    foreach($opts as $os=>$ol){
-        $key = trim($os , ':');
-        $isReq = strlen($os) < 3 ;
-        if(!array_key_exists($key , $o )){
-            if($isReq){
+    foreach ($opts as $os => $ol) {
+        $key = trim($os, ':');
+        $isReq = strlen($os) < 3;
+        $val = trim($ol, ':');
+
+        if (array_key_exists($val, $o)) {
+            if ($o[$val] == false){
+                $o[$val] = true;
+                $o[$key] = true;
+            }
+        }
+
+        if (!array_key_exists($key, $o)) {
+            if ($isReq) {
                 echo "arg '-$key' is mandatory \n\n";
                 $hasMissing = true;
-                
+
             }
-            $o[$key]=null ;
-        }else{
+            $o[$key] = null;
+        } else {
             //non requered args are set to false if only flag is used
             //just set them to true as they were really used
-            if($o[$key] == false && !$isReq){
+            if ($o[$key] == false && !$isReq) {
                 $o[$key] = true;
             }
         }
     }
-    $argsss = (object)$o;
-    if($hasMissing){
-        if($argsss->d && $argsss->p){
+    $argsss = (object) $o;
+    if ($hasMissing) {
+        if ($argsss->d && $argsss->p) {
             //all ok
-        }else{
+        } else {
             $printopt($desc);
-            exit();
+            //exit();
         }
     }
-    
+
     return $argsss;
 }
